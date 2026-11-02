@@ -1,0 +1,19 @@
+# DSH runtime state and local profile artifacts — never commit these
+.dsh/
+agent-presets/
+cordis.patch.yml
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Node
+node_modules/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,21 @@
+name: Gemini Flash 调优 · 纪律优先
+description: "为 Gemini Flash 类模型调优的 DSH 预设：约 12k 字符成文宪法 + <PLAN> 双工件协议 + UnifiedDiff 物理行号自查 + 八原子工具首轮收敛 + [HONEST_BLOCKED] 失败通道。"
+# 模型搭配（2026-10-29 实测）：DSH 的 preset schema 是 {id,name,description,order,plugins}，
+# **没有 model 字段**，所以模型只能由会话选择器指定，无法写进预设。
+recommendedModel:
+  provider: aistudio-local
+  model: gemini-4-argon(high)
+  maxTokensFloor: 32768
+  rationale: "同 persona / 同工具集 / 同任务 4 轮工具链：gemini-3.8-flash 有 2 轮思考归零，gemini-4-argon(high) 单调上升一次未归零；高档位思考占总输出预算 73%（475/647），maxTokens 给小会得到空回复。"
+avoidModels:
+  - model: gemini-3.8-flash
+    reason: "低档位，长工具链中思考整段归零，锚定机制随之失效"
+# 更正记录（2026-10-29）：此处曾列出 "gemini-3.8-flash-high (CPA 通道)"，理由写作
+# "reasoning_content 恒为 0 字符、思考通道不存在"。该结论**已被实测推翻** —— 它来自
+# 一次不带工具的极小探针；带工具的长会话里该通道 reasoningEffort=high 正常工作，
+# 整场推理 4,116 字符，且两次完整验收（16 轮 × 10 read、2 次压缩）都跑通。
+# 故从 avoidModels 移除，另记于 measuredNote。
+measuredNote:
+  - model: antigravity/gemini-3.8-flash-high
+    verdict: "可用；日常长任务推荐"
+    evidence: "完整验收会话 e1b76507 / 141d618f，reasoning 非空（4,116 字符）"
